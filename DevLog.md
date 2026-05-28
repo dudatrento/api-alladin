@@ -68,6 +68,23 @@ _return resposta.json()_: Aqui, converto o dado recebido para JSON. O FastAPI fa
 
 **Documentação**: Estruturei o repositório com uma pasta `assets/` para organizar os prints, utilizando caminhos em markdown para garantir a legibilidade das imagens na documentação final no GitHub.
 
+### 6.4 Implementando a Query String
+Pesquisei o que era Query String e encontrei que é a parte de uma URL usada para enviar dados ou parâmetros para um servidor, geralmente localizada após um ponto de interrogação (?), sendo muito usada em buscas e filtros. Os parâmetros são definidos por um conjunto "chave=valor". 
+
+Então, para implementar a funcionalidade de parâmetros via URL (Query String), consultei a documentação oficial do FastAPI, na seção de Query Parameters, para entender como declarar e tipar os dados recebidos na rota. Optei inicialmente por receber a data como str para manter a simplicidade na manipulação da rota, mas depois mudei para date, que permite uma validação automática pelo FastAPI (ele é quem vai verificar se o que o usuário digitou é realmente uma data válida, e, caso não seja, vai automaticamente retornar um erro). Isso garante que a API só aceite parâmetros que seguem estritamente o formato ISO-8601 (YYYY-MM-DD).
+
+### 6.5 Adicionando o tratamento de erros
+Basicamente, a ideia é controlar a mensagem que a API mostra ao cliente caso a API externa caia. Para isso, consultei o material de Handling Erros na documentação oficial do FastAPI e o Try/Except na documentação Python. Comecei então importando o `HTTPException`. 
+
+Eu utilizei o try/except do Python para implementar um tratamento de erros mais robusto. Como estou consumindo um serviço externo, eu sei que ele não é 100% confiável (pode cair, dar problema etc). O _try_ isola a tentativa de requisição, e o _except_ permite que eu capture erros, devolvendo uma resposta tratada com HTTPException em vez de deixar a aplicação travar, encerrar ou exibir um erro genérico.
+
+Coloquei o timeout de 10 segundos para que o httpx não fique tentando se conectar para sempre. Optei por um valor maior para oferecer mais tolerância a variações de latência do serviço de terceiros. O uso do `raise_for_status()` se deu para que o programa não continue de forma silenciosa quando algo está dando errado, executando assim o bloco try/except para tratar a falha de forma adequada. 
+
+Verifiquei que, ao enviar uma data malformada (ex: 2026-13-45), a API intercepta a requisição e retorna um erro. 
+
+
+
+
 #### 7. Material consultado durante o desenvolvimento
 **Youtube:**
 1. Como integrar com uma API na PRÁTICA? (https://www.youtube.com/watch?v=Bi5HsQz-87A)
@@ -77,6 +94,8 @@ _return resposta.json()_: Aqui, converto o dado recebido para JSON. O FastAPI fa
 **Documentações oficiais:**
 FastAPI (https://fastapi.tiangolo.com/pt/tutorial/) 
 HTTPX (https://www.python-httpx.org/)
+Python (https://docs.python.org/3/tutorial/errors.html)
 
 **Sites/blogs:**
 1. Requests vs. HTTPX vs. AIOHTTP: comparação detalhada (https://brightdata.com.br/blog/dados-do-site/requests-vs-httpx-vs-aiohttp)
+2. Python Try Except (https://www.w3schools.com/Python/python_try_except.asp)
