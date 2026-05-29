@@ -7,7 +7,7 @@ app = FastAPI(
     description="Consulta preços de tapetes de uma fonte externa e expõe os dados com a data da consulta.",
 )
 
-url = "https://testedefensoriapr.pythonanywhere.com/precos"
+URL = "https://testedefensoriapr.pythonanywhere.com/precos"
 
 @app.get("/precos", summary="Consulta preços de tapetes")
 async def get_precos(
@@ -19,7 +19,7 @@ async def get_precos(
     """
     try:
         async with httpx.AsyncClient() as client:
-            resposta = await client.get(url, timeout=10.0)
+            resposta = await client.get(URL, timeout=10.0)
             resposta.raise_for_status() 
             dados = resposta.json()
             
