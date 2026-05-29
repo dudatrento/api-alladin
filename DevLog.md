@@ -73,7 +73,7 @@ Pesquisei o que era Query String e encontrei que é a parte de uma URL usada par
 
 Então, para implementar a funcionalidade de parâmetros via URL (Query String), consultei a documentação oficial do FastAPI, na seção de Query Parameters, para entender como declarar e tipar os dados recebidos na rota. Optei inicialmente por receber a data como str para manter a simplicidade na manipulação da rota, mas depois mudei para date, que permite uma validação automática pelo FastAPI (ele é quem vai verificar se o que o usuário digitou é realmente uma data válida, e, caso não seja, vai automaticamente retornar um erro). Isso garante que a API só aceite parâmetros que seguem estritamente o formato ISO-8601 (YYYY-MM-DD).
 
-### 6.5 Adicionando o tratamento de erros
+### 6.5 Adicionando o tratamento de erros (fim do dia 02)
 Basicamente, a ideia é controlar a mensagem que a API mostra ao cliente caso a API externa caia. Para isso, consultei o material de Handling Erros na documentação oficial do FastAPI e o Try/Except na documentação Python. Comecei então importando o `HTTPException`. 
 
 Eu utilizei o try/except do Python para implementar um tratamento de erros mais robusto. Como estou consumindo um serviço externo, eu sei que ele não é 100% confiável (pode cair, dar problema etc). O _try_ isola a tentativa de requisição, e o _except_ permite que eu capture erros, devolvendo uma resposta tratada com HTTPException em vez de deixar a aplicação travar, encerrar ou exibir um erro genérico.
@@ -82,6 +82,18 @@ Coloquei o timeout de 10 segundos para que o httpx não fique tentando se conect
 
 Verifiquei que, ao enviar uma data malformada (ex: 2026-13-45), a API intercepta a requisição e retorna um erro. 
 
+### 6.6 Adicionando validação de integridade
+O que acontece se, em determinado dia, a lista de preços estiver vazia? É importante ter uma mensagem de erro que especifique isso, então optei por construir essa mensagem. Como não consegui testar uma data específica para verificar se havia uma lista de preços vazia, optei por "forçar" o erro com um True statement (`if True: raise HTTPException (status_code=404, detail="Nenhum preço encontrado...")`) e deu certo. 
+
+### 6.7 Documentação Swagger
+Acessei o destino http://127.0.0.1:8000/docs para verificar a interface que aparecia a partir do FastAPI, que já gera o Swagger UI automaticamente. Essa ferramenta facilita a compreensão dos endpoints e permite testes rápidos, servindo como uma documentação sempre atualizada do projeto.
+
+### 6.8 Adicionando Type Hints
+Já havia especificado o tipo date em `data: date`. 
+Adicionado `-> dict:`
+
+### 6.9 Elaboração do README
+Elaboração do README. 
 
 
 

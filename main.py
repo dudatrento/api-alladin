@@ -5,7 +5,7 @@ import httpx
 app = FastAPI()
 
 @app.get("/precos")
-async def get_precos(data: date):
+async def get_precos(data: date)-> dict:
     url = "https://testedefensoriapr.pythonanywhere.com/precos"
     
     try:
@@ -13,6 +13,8 @@ async def get_precos(data: date):
             resposta = await client.get(url, timeout=10.0)
             resposta.raise_for_status() 
             dados = resposta.json()
+            if not dados:
+                raise HTTPException(status_code=404, detail="Nenhum preço encontrado...")
     except httpx.HTTPError:
         raise HTTPException(status_code=503, detail="O serviço de preços não está disponível no momento.")
         
