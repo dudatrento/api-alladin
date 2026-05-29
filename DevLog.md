@@ -113,7 +113,7 @@ Adicionado `-> dict:`
 Elaboração do README, estruturado para que qualquer pessoa consiga rodar o projeto do zero, sem precisar de contexto prévio. Optei por organizar em quatro seções principais: funcionalidades, tecnologias utilizadas, como rodar o projeto e como testar. Incluí também um trecho sobre o uso do ambiente virtual e o uso do requirements.txt para instalação das dependências, garantindo que o ambiente seja reprodutível em qualquer máquina.
 
 ### 6.10 Rodando os testes unitários
-Utilização da ferramenta `TestClient` do FastAPI e o `pytest` para rodar dois testes unitários. O primeiro validou o caminho feliz: uma requisição com data válida deve retornar status 200 e um JSON contendo o campo `precos`. O segundo testou o caminho triste a partir de uma data mal formada e a validação automática do FastAPI. Os testes foram executados com o `pytest test_main.py -v` e o resultado foi "2 passed in 1.06s", confirmando que ambos os cenários estão funcionando corretamente.
+Utilização da ferramenta `TestClient` do FastAPI e o `pytest` para rodar dois testes unitários: um de sucesso e outro de falha. O primeiro validou o teste de sucesso: uma requisição com data válida deve retornar status 200 e um JSON contendo o campo `precos`. O segundo testou a falha a partir de uma data mal formada e a validação automática do FastAPI. Os testes foram executados com o `pytest test_main.py -v` e o resultado foi "2 passed in 1.06s", confirmando que ambos os cenários estão funcionando corretamente.
 
 ### 6.11 Pequenas modificações (fim do dia 03)
 Inserção de título e breve descrição da API para aparecer no Swagger.
@@ -129,9 +129,10 @@ Inserção do query com a descrição para melhorar a explicação.
  
 
 **Documentações oficiais:**
-FastAPI (https://fastapi.tiangolo.com/pt/tutorial/) 
-HTTPX (https://www.python-httpx.org/)
-Python (https://docs.python.org/3/tutorial/errors.html)
+1. FastAPI (https://fastapi.tiangolo.com/pt/tutorial/) 
+2. HTTPX (https://www.python-httpx.org/)
+3. Python (https://docs.python.org/3/tutorial/errors.html)
+4. TestClient no FastAPI (https://fastapi.tiangolo.com/reference/testclient/) e (https://fastapi.tiangolo.com/tutorial/testing/#fastapi-app-file)
 
 **Sites/blogs:**
 1. Requests vs. HTTPX vs. AIOHTTP: comparação detalhada (https://brightdata.com.br/blog/dados-do-site/requests-vs-httpx-vs-aiohttp)
