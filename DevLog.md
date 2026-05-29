@@ -10,10 +10,27 @@
 - Optei pelo `httpx` em vez do `requests` por ser mais moderno e assíncrono (consegue lidar com várias requisições ao mesmo tempo sem "travar" enquanto espera uma resposta), o que funciona melhor com o FastAPI, garantindo que a API Aladdin não fique bloqueada durante o consumo da API externa. 
 
 ## 3. Desafios e soluções
+**Desafio**: Garantir a resiliência da API ao consumir um serviço externo instável ou vazio.
+
+_Solução_: Implementação de tratamento de exceções com try/except para falhas e validação lógica para respostas vazias, retornando status HTTP semânticos em vez de falhas genéricas.
+
+**Desafio**: Garantir a qualidade e a confiabilidade do endpoint.
+
+_Solução_: Utilização do TestClient do FastAPI para testes unitários, assegurando que as rotas se comportem conforme o esperado tanto num cenário de sucesso quanto de erro.
+
+**Desafio**: Como testar erro colocando uma data inválida (tópico 6.6)
+
+_Solução_: Optei por "forçar" o erro com um True statement (`if True: raise HTTPException (status_code=404, detail="Nenhum preço encontrado.")`) Após o sucesso, retornei para o original.
 
 ## 4. Organização do desafio
+**Fluxo de Trabalho**: Adoção de boas práticas de desenvolvimento, com o uso de ambientes virtuais (venv), controle de dependências (requirements.txt) e documentação clara (README.md). Foco em legibilidade através de Type Hints. Separação da API dos testes (test_main.py). 
 
 ## 5. Sugestões de próximos passos
+1. Implementar cache para não chamar a API externa a cada requisição
+
+2. Adicionar autenticação na rota
+
+3. Implementar testes com mock para isolar dependências externas
 
 ## 6. Passo a passo feito
 ### 6.1. Organização do ambiente do projeto: 
@@ -83,7 +100,7 @@ Coloquei o timeout de 10 segundos para que o httpx não fique tentando se conect
 Verifiquei que, ao enviar uma data malformada (ex: 2026-13-45), a API intercepta a requisição e retorna um erro. 
 
 ### 6.6 Adicionando validação de integridade
-O que acontece se, em determinado dia, a lista de preços estiver vazia? É importante ter uma mensagem de erro que especifique isso, então optei por construir essa mensagem. Como não consegui testar uma data específica para verificar se havia uma lista de preços vazia, optei por "forçar" o erro com um True statement (`if True: raise HTTPException (status_code=404, detail="Nenhum preço encontrado...")`) e deu certo. 
+O que acontece se, em determinado dia, a lista de preços estiver vazia? É importante ter uma mensagem de erro que especifique isso, então optei por construir essa mensagem. Como não consegui testar uma data específica para verificar se havia uma lista de preços vazia, optei por "forçar" o erro com um True statement (`if True: raise HTTPException (status_code=404, detail="Nenhum preço encontrado...")`) e deu certo. Depois disso, retornei para o original.
 
 ### 6.7 Documentação Swagger
 Acessei o destino http://127.0.0.1:8000/docs para verificar a interface que aparecia a partir do FastAPI, que já gera o Swagger UI automaticamente. Essa ferramenta facilita a compreensão dos endpoints e permite testes rápidos, servindo como uma documentação sempre atualizada do projeto.
@@ -93,15 +110,23 @@ Já havia especificado o tipo date em `data: date`.
 Adicionado `-> dict:`
 
 ### 6.9 Elaboração do README
-Elaboração do README. 
+Elaboração do README, estruturado para que qualquer pessoa consiga rodar o projeto do zero, sem precisar de contexto prévio. Optei por organizar em quatro seções principais: funcionalidades, tecnologias utilizadas, como rodar o projeto e como testar. Incluí também um trecho sobre o uso do ambiente virtual e o uso do requirements.txt para instalação das dependências, garantindo que o ambiente seja reprodutível em qualquer máquina.
 
+### 6.10 Rodando os testes unitários
+Utilização da ferramenta `TestClient` do FastAPI e o `pytest` para rodar dois testes unitários. O primeiro validou o caminho feliz: uma requisição com data válida deve retornar status 200 e um JSON contendo o campo `precos`. O segundo testou o caminho triste a partir de uma data mal formada e a validação automática do FastAPI. Os testes foram executados com o `pytest test_main.py -v` e o resultado foi "2 passed in 1.06s", confirmando que ambos os cenários estão funcionando corretamente.
 
+### 6.11 Pequenas modificações (fim do dia 03)
+Inserção de título e breve descrição da API para aparecer no Swagger.
+Modificação no except para não englobar todos os erros juntos (timeout, erro de conexão e erro HTTP). Criação de uma mensagem diferente para cada tipo de erro (o que é mais user-friendly).
+Inserção do query com a descrição para melhorar a explicação. 
 
-#### 7. Material consultado durante o desenvolvimento
+## 7. Material consultado durante o desenvolvimento
 **Youtube:**
-1. Como integrar com uma API na PRÁTICA? (https://www.youtube.com/watch?v=Bi5HsQz-87A)
-2. HTTPX Tutorial - A next-generation HTTP client for Python (https://www.youtube.com/watch?v=qAh5dDODJ5k)
-3. Best Practice to Make HTTP Request in FastAPI Application (https://www.youtube.com/watch?v=row-SdNdHFE)
+1. Python FastAPI Tutorial: Build a REST API in 15 Minutes (https://www.youtube.com/watch?v=iWS9ogMPOI0) 
+2. Como integrar com uma API na PRÁTICA? (https://www.youtube.com/watch?v=Bi5HsQz-87A)
+3. HTTPX Tutorial - A next-generation HTTP client for Python (https://www.youtube.com/watch?v=qAh5dDODJ5k)
+4. Best Practice to Make HTTP Request in FastAPI Application (https://www.youtube.com/watch?v=row-SdNdHFE)
+ 
 
 **Documentações oficiais:**
 FastAPI (https://fastapi.tiangolo.com/pt/tutorial/) 
@@ -111,3 +136,5 @@ Python (https://docs.python.org/3/tutorial/errors.html)
 **Sites/blogs:**
 1. Requests vs. HTTPX vs. AIOHTTP: comparação detalhada (https://brightdata.com.br/blog/dados-do-site/requests-vs-httpx-vs-aiohttp)
 2. Python Try Except (https://www.w3schools.com/Python/python_try_except.asp)
+3. Como escrever um README incrível no seu Github (https://www.alura.com.br/artigos/escrever-bom-readme)
+
