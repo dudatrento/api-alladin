@@ -32,4 +32,4 @@ Acesse a documentação interativa para explorar e testar os endpoints: `http://
 Exemplo de requisição direta: GET http://127.0.0.1:8000/precos?data=2026-05-28
 
 ## Como rodar os testes
-Através dp `pytest test_main.py -v`. 
+Através do `pytest test_main.py -v`. 
